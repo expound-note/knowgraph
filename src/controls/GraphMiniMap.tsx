@@ -1,13 +1,13 @@
 import React from 'react';
-import { 
+import {
+	Node,
 	MiniMap,
 	Controls,
 	Background,
-	Node 
 } from 'react-flow-renderer';
 
 const nodeStrokeColor = (n: Node) => {
-	if (n.style?.background) return n.style.background;
+	if (n.style?.background) return n.style.background.toString();
 	if (n.type === 'input') return '#0041d0';
 	if (n.type === 'output') return '#ff0072';
 	if (n.type === 'default') return '#1a192b';
@@ -16,7 +16,7 @@ const nodeStrokeColor = (n: Node) => {
 }
 
 const nodeColor = (n: Node) => {
-	if (n.style?.background) return n.style.background;
+	if (n.style?.background) return n.style.background.toString();
 
 	return '#fff';
 }

@@ -11,6 +11,7 @@
     "deploy": "ASSET_URL=https://graph.expound.tech yarn build && ./node_modules/.bin/gh-pages -d dist"
   },
   "dependencies": {
+    "@fluentui/react-components": "^9.1.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-flow-renderer": "^10.3.11"

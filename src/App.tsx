@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import ReactFlow, {
+  Node,
   NodeProps,
   addEdge,
   Background,
@@ -20,7 +21,6 @@ import { getGraph } from './utils/api';
 
 // 默认加载空的节点数据
 const { nodes: initialNodes, edges: initialEdges } = { nodes: [], edges: [] };
-const snapGrid = [20, 20];
 
 function Graph() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -40,7 +40,7 @@ function Graph() {
 
   // Drag to add nodes
   let id = 0;
-  const getId = () => `node_${id++}`;
+  let getId = () => `node_${id++}`;
   const reactFlowWrapper = useRef(null);
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -50,19 +50,17 @@ function Graph() {
     (event) => {
       event.preventDefault();
 
-      const reactFlowBounds = reactFlowWrapper?.current?.getBoundingClientRect();
-      const type = event.dataTransfer.getData('application/reactflow');
-
       // check if the dropped element is valid
+      const type = event.dataTransfer.getData('application/reactflow');
       if (typeof type === 'undefined' || !type) {
         return;
       }
 
-      console.log(reactFlowInstance)
       const position = reactFlowInstance?.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
+        x: event.clientX,
+        y: event.clientY,
       }) as XYPosition;
+
       const newNode: Node = {
         id: getId(),
         type,
@@ -89,8 +87,6 @@ function Graph() {
             onDragOver={onDragOver}
             fitView
             defaultZoom={1.5}
-            snapToGrid={true}
-            snapGrid={snapGrid}
             attributionPosition="bottom-right" >
             <GraphMiniMap />
           </ReactFlow>

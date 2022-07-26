@@ -18,28 +18,6 @@
   background: #fff;
 }
 
-.graph-container aside .nav-tabs {
-  height: 32px;
-  border-bottom: 1px solid #eee;
-  margin-bottom:  16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.graph-container aside .nav-tabs .tab {
-  text-align: center;
-  width: 25%;
-  padding: 8px 0;
-}
-
-.graph-container aside .nav-tabs .tab.active {
-  border-bottom: 2px solid black;
-}
-
-.graph-container aside .content {
-  padding: 8px;
-}
 .graph-container aside .description {
   margin-bottom: 10px;
 }
