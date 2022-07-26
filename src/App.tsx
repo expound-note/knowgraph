@@ -1,62 +1,104 @@
-import React, { useCallback } from 'react'
+import React, { useState, useCallback, useCallback, useRef } from 'react'
 import ReactFlow, {
+  NodeProps,
   addEdge,
   Background,
-  MiniMap, 
   Controls,
+  XYPosition,
   useNodesState,
   useEdgesState,
+  ReactFlowInstance,
+  ReactFlowProvider
 } from 'react-flow-renderer';
+
+import './App.css';
+
+import GraphMiniMap from './controls/GraphMiniMap';
+import Sidebar from './sidebar/Index';
 
 import { getGraph } from './utils/api';
 
 // 默认加载空的节点数据
 const { nodes: initialNodes, edges: initialEdges } = { nodes: [], edges: [] };
+const snapGrid = [20, 20];
 
-function App() {
+function Graph() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>();
 
-  const onInit = (_reactFlowInstance) =>  {
-    console.log('🚀 Graph loaded success :', _reactFlowInstance);
-
-    let id = 0;
-    getGraph(id as string, (graph: any) => {
+  const onInit = (_reactFlowInstance: ReactFlowInstance) => {
+    setReactFlowInstance(_reactFlowInstance)
+    getGraph('0', (graph: any) => {
       setNodes(graph.nodes);
       setEdges(graph.edges);
-    });
+    })
   }
+
   const onConnect = useCallback((params) => 
-    setEdges((eds) => addEdge(params, eds)), []);
+    setEdges((eds) => addEdge(params, eds)), [])
 
-  return <ReactFlow 
-    nodes={nodes} 
-    edges={edges}
-    onNodesChange={onNodesChange}
-    onEdgesChange={onEdgesChange}
-    onInit={onInit}
-    // onConnect={onConnect}
-    fitView
-    attributionPosition="bottom-right">
-    <MiniMap
-      nodeStrokeColor={(n) => {
-        if (n.style?.background) return n.style.background;
-        if (n.type === 'input') return '#0041d0';
-        if (n.type === 'output') return '#ff0072';
-        if (n.type === 'default') return '#1a192b';
+  // Drag to add nodes
+  let id = 0;
+  const getId = () => `node_${id++}`;
+  const reactFlowWrapper = useRef(null);
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, [])
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
 
-        return '#eee';
-      }}
-      nodeColor={(n) => {
-        if (n.style?.background) return n.style.background;
+      const reactFlowBounds = reactFlowWrapper?.current?.getBoundingClientRect();
+      const type = event.dataTransfer.getData('application/reactflow');
 
-        return '#fff';
-      }}
-      nodeBorderRadius={2}
-    />
-    <Controls />
-    <Background color="#aaa" gap={16} />
-  </ReactFlow>
+      // check if the dropped element is valid
+      if (typeof type === 'undefined' || !type) {
+        return;
+      }
+
+      console.log(reactFlowInstance)
+      const position = reactFlowInstance?.project({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      }) as XYPosition;
+      const newNode: Node = {
+        id: getId(),
+        type,
+        position,
+        data: { label: `${type} node` },
+      };
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [reactFlowInstance]
+  )
+
+  return (
+    <div className="graph-container">
+      <ReactFlowProvider>
+        <div className="graph-wrapper" ref={reactFlowWrapper}>
+          <ReactFlow 
+            nodes={nodes} 
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onInit={onInit}
+            onConnect={onConnect}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            fitView
+            defaultZoom={1.5}
+            snapToGrid={true}
+            snapGrid={snapGrid}
+            attributionPosition="bottom-right" >
+            <GraphMiniMap />
+          </ReactFlow>
+        </div>
+        <Sidebar nodes={nodes} setNodes={setNodes} />
+      </ReactFlowProvider>
+    </div>
+  )
 }
 
-export default App
+export default Graph
