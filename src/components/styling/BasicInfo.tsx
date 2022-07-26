@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { Node, Edge } from 'react-flow-renderer';
 import { Divider } from "@fluentui/react-components"
 
-let currentNodeId = 0
+let currentNodeId = '0'
 export default ({ selectedNode, setNodes, setEdges }: any) => {
   const [nodeName, setNodeName] = useState('')
   const [nodeBg, setNodeBg] = useState('')
@@ -19,7 +20,7 @@ export default ({ selectedNode, setNodes, setEdges }: any) => {
   }, [selectedNode])
 
 	useEffect(() => {
-    setNodes((nds) => nds.map((node) => {
+    setNodes((nds: any) => nds.map((node: Node) => {
       if (node.id === currentNodeId) {
         // it's important that you create a new object here
         // in order to notify react flow about the change
@@ -33,8 +34,7 @@ export default ({ selectedNode, setNodes, setEdges }: any) => {
   }, [nodeName, setNodes]);
 
 	useEffect(() => {
-    setNodes((nds) =>
-      nds.map((node) => {
+    setNodes((nds: any) => nds.map((node: Node) => {
         if (node.id === currentNodeId) {
           // it's important that you create a new object here
           // in order to notify react flow about the change
@@ -47,8 +47,8 @@ export default ({ selectedNode, setNodes, setEdges }: any) => {
   }, [nodeBg, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) =>
-      nds.map((node) => {
+    setNodes((nds: any) =>
+      nds.map((node: Node) => {
         if (node.id === currentNodeId) {
           // when you update a simple type you can just update the value
           node.hidden = nodeHidden;
@@ -57,8 +57,8 @@ export default ({ selectedNode, setNodes, setEdges }: any) => {
         return node;
       })
     );
-    setEdges((eds) =>
-      eds.map((edge) => {
+    setEdges((eds: any) =>
+      eds.map((edge: Edge) => {
         if (edge.source === currentNodeId || edge.target === currentNodeId) {
           edge.hidden = nodeHidden;
         }

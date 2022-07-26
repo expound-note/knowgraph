@@ -26,7 +26,7 @@ function Graph() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>();
-  const [nowSelectedNode, setNowSelectedNode] = useState(null);
+  const [nowSelectedNode, setNowSelectedNode] = useState<Node>();
 
   const onInit = (_reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(_reactFlowInstance)
