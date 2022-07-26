@@ -1,14 +1,26 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Divider } from "@fluentui/react-components"
 
-export default ({ setNodes, setEdges }: any) => {
-	const [nodeName, setNodeName] = useState('Node 1')
-	const [nodeBg, setNodeBg] = useState('#fff')
-	const [nodeHidden, setNodeHidden] = useState(false)
+let currentNodeId = 0
+export default ({ selectedNode, setNodes, setEdges }: any) => {
+  const [nodeName, setNodeName] = useState('')
+  const [nodeBg, setNodeBg] = useState('')
+  const [nodeHidden, setNodeHidden] = useState(false) 
+
+  useEffect(() => {
+    if (selectedNode === null) return
+
+    setNodeName(selectedNode.data.label)
+
+    currentNodeId = selectedNode.id
+    const bgColor = selectedNode.style && selectedNode.style.background
+      ? selectedNode.style.background : '#fff'
+    setNodeBg(bgColor)
+  }, [selectedNode])
 
 	useEffect(() => {
     setNodes((nds) => nds.map((node) => {
-      if (node.id === '1') {
+      if (node.id === currentNodeId) {
         // it's important that you create a new object here
         // in order to notify react flow about the change
         node.data = {
@@ -23,7 +35,7 @@ export default ({ setNodes, setEdges }: any) => {
 	useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
-        if (node.id === '1') {
+        if (node.id === currentNodeId) {
           // it's important that you create a new object here
           // in order to notify react flow about the change
           node.style = { ...node.style, backgroundColor: nodeBg };
@@ -37,7 +49,7 @@ export default ({ setNodes, setEdges }: any) => {
   useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
-        if (node.id === '1') {
+        if (node.id === currentNodeId) {
           // when you update a simple type you can just update the value
           node.hidden = nodeHidden;
         }
@@ -47,7 +59,7 @@ export default ({ setNodes, setEdges }: any) => {
     );
     setEdges((eds) =>
       eds.map((edge) => {
-        if (edge.id === 'e1-2') {
+        if (edge.source === currentNodeId || edge.target === currentNodeId) {
           edge.hidden = nodeHidden;
         }
 

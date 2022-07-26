@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import ReactFlow, {
   Node,
   NodeProps,
@@ -26,6 +26,7 @@ function Graph() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>();
+  const [nowSelectedNode, setNowSelectedNode] = useState(null);
 
   const onInit = (_reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(_reactFlowInstance)
@@ -83,6 +84,7 @@ function Graph() {
             onEdgesChange={onEdgesChange}
             onInit={onInit}
             onConnect={onConnect}
+            onNodeClick={(event, node) => setNowSelectedNode(node)}
             onDrop={onDrop}
             onDragOver={onDragOver}
             fitView
@@ -91,7 +93,11 @@ function Graph() {
             <GraphMiniMap />
           </ReactFlow>
         </div>
-        <Sidebar nodes={nodes} setNodes={setNodes} setEdges={setEdges} />
+        <Sidebar 
+          nodes={nodes}
+          selectedNode={nowSelectedNode}
+          setNodes={setNodes} 
+          setEdges={setEdges} />
       </ReactFlowProvider>
     </div>
   )

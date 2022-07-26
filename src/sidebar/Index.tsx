@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default ({ nodes, setNodes, setEdges }: any) => {
+export default ({ nodes, selectedNode, setNodes, setEdges }: any) => {
   const [selectedValue, setSelectedValue] = useState<TabValue>('new_node')
   const onTabSelect = (event: SelectTabEvent, data: SelectTabData) => {
     setSelectedValue(data.value);
@@ -58,7 +58,7 @@ export default ({ nodes, setNodes, setEdges }: any) => {
     </TabList>
     <div className={styles.panels}>
       {selectedValue === 'new_node' && <NewNode />}
-      {selectedValue === 'style_node' && <StyleNode nodes={nodes} setNodes={setNodes} setEdges={setEdges} />}
+      {selectedValue === 'style_node' && <StyleNode selectedNode={selectedNode} setNodes={setNodes} setEdges={setEdges} />}
       {selectedValue === 'graph_info' && <GraphInfo nodes={nodes} setNodes={setNodes} />}
     </div>
   </div>
