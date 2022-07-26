@@ -91,7 +91,7 @@ function Graph() {
             <GraphMiniMap />
           </ReactFlow>
         </div>
-        <Sidebar nodes={nodes} setNodes={setNodes} />
+        <Sidebar nodes={nodes} setNodes={setNodes} setEdges={setEdges} />
       </ReactFlowProvider>
     </div>
   )

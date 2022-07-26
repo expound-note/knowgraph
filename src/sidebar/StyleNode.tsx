@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
-export default ({ nodes, setNodes }: any) => {
+import BasicInfo from '../components/styling/BasicInfo'
+
+export default ({ nodes, setNodes, setEdges }: any) => {
+	
+
 	return <>
-	  <div className="description">
-	    Update Node Style.
-	  </div>
+	  <BasicInfo setNodes={setNodes} setEdges={setEdges} />
 	</>
 } 
