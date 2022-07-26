@@ -9,12 +9,12 @@ export default ({ selectedNode, setNodes, setEdges }: any) => {
   const [nodeHidden, setNodeHidden] = useState(false) 
 
   useEffect(() => {
-    if (selectedNode === null) return
+    if (selectedNode === null || selectedNode === undefined) return
 
     setNodeName(selectedNode.data.label)
 
     currentNodeId = selectedNode.id
-    const bgColor = selectedNode.style && selectedNode.style.background
+    const bgColor = selectedNode && selectedNode.style && selectedNode.style
       ? selectedNode.style.background : '#fff'
     setNodeBg(bgColor)
   }, [selectedNode])
