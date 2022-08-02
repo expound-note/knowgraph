@@ -1,7 +1,7 @@
 import React from 'react';
 import { MarkerType } from 'react-flow-renderer';
 
-const onChange = (event) => {
+const onChange = (event: any) => {
     console.log('change color successfully')  
 };
 

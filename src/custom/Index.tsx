@@ -1,5 +1,5 @@
 // Custom Nodes
-import ColorSelector from './nodes/colorSelector';
+import ColorSelector from './nodes/ColorSelector';
 import DragHandle from './nodes/DragHandle';
 
 // Custom Edges
