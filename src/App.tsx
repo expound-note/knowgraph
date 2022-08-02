@@ -3,6 +3,7 @@ import ReactFlow, {
   Node,
   NodeProps,
   addEdge,
+  updateEdge,
   Background,
   Controls,
   XYPosition,
@@ -12,10 +13,12 @@ import ReactFlow, {
   ReactFlowProvider
 } from 'react-flow-renderer';
 
-import './App.css';
+import './app.css';
 
 import GraphMiniMap from './controls/GraphMiniMap';
 import Sidebar from './sidebar/Index';
+// 引入自定义 Node / Edge / Connection
+import Custom from './custom/Index';
 
 import { getGraph } from './utils/api';
 
@@ -38,6 +41,22 @@ function Graph() {
 
   const onConnect = useCallback((params) => 
     setEdges((eds) => addEdge(params, eds)), [])
+
+  // 更新及删除 Edge
+  // gets called after end of edge gets dragged to another source or target
+  const edgeUpdateSuccessful = useRef(true)
+  const onEdgeUpdate = (oldEdge: Edge, newConnection: Connection) => 
+    setEdges((els) => updateEdge(oldEdge, newConnection, els));
+  const onEdgeUpdateStart = useCallback(() => {
+    edgeUpdateSuccessful.current = false;
+  }, [])
+  const onEdgeUpdateEnd = useCallback((_, edge) => {
+    if (!edgeUpdateSuccessful.current) {
+      setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+    }
+    edgeUpdateSuccessful.current = true;
+  }, [])
+
 
   // Drag to add nodes
   let id = 0;
@@ -80,6 +99,11 @@ function Graph() {
           <ReactFlow 
             nodes={nodes} 
             edges={edges}
+            nodeTypes={Custom.nodeTypes}
+            edgeTypes={Custom.edgeTypes}
+            onEdgeUpdate={onEdgeUpdate}
+            onEdgeUpdateStart={onEdgeUpdateStart}
+            onEdgeUpdateEnd={onEdgeUpdateEnd}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onInit={onInit}
@@ -88,7 +112,6 @@ function Graph() {
             onDrop={onDrop}
             onDragOver={onDragOver}
             fitView
-            defaultZoom={1.5}
             attributionPosition="bottom-right" >
             <GraphMiniMap />
           </ReactFlow>

@@ -1,12 +1,19 @@
 import React from 'react';
 import { MarkerType } from 'react-flow-renderer';
 
+const onChange = (event) => {
+    console.log('change color successfully')  
+};
+
+const initBgColor = '#1A192B';
 const getGraph = (id: string, callback: Function) => {
   callback({
     nodes: [
   {
     id: '1',
-    type: 'input',
+    type: 'dragHandle',
+    dragHandle: '.custom-drag-handle',
+    style: { border: '1px solid #ddd', padding: '20px 40px' },
     data: {
       label: 'Welcome to React Flow!',
     },
@@ -14,9 +21,8 @@ const getGraph = (id: string, callback: Function) => {
   },
   {
     id: '2',
-    data: {
-      label: 'This is a default node',
-    },
+    type: 'colorSelector',
+    data: { onChange: onChange, color: initBgColor },
     position: { x: 100, y: 100 },
   },
   {
@@ -62,12 +68,16 @@ const getGraph = (id: string, callback: Function) => {
   },
 ],
     edges: [
-  { id: 'e1-2', source: '1', target: '2', label: 'this is an edge label' },
+  { id: 'e1-2', source: '1', target: '2', 
+    type: 'text',
+    data: { text: 'custom edge' },
+    label: 'this is an edge label' },
   { id: 'e1-3', source: '1', target: '3' },
   {
     id: 'e3-4',
     source: '3',
     target: '4',
+    type: 'button',
     animated: true,
     label: 'animated edge',
   },
