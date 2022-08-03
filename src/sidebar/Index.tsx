@@ -14,9 +14,9 @@ import { BoxMultipleSearchRegular,
 } from '@fluentui/react-icons'
 
 import './index.css'
-import NewNode from './NewNode'
-import StyleNode from './StyleNode'
-import GraphInfo from './GraphInfo'
+import NewNode from './tabs/NewNode'
+import StyleNode from './tabs/StyleNode'
+import GraphInfo from './tabs/GraphInfo'
 
 const useStyles = makeStyles({
   root: {

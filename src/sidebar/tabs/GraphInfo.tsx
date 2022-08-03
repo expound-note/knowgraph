@@ -1,9 +1,11 @@
-import React, { useCallback  }from 'react'
-import { Node, 
-  useStore, 
-  useStoreApi, 
+import React, { useCallback  } from 'react'
+import { 
+	Node,
+  useStore,
+  useStoreApi,
   useReactFlow,
-  ReactFlowState } from 'react-flow-renderer'
+  ReactFlowState
+} from 'react-flow-renderer'
 
 const transformSelector = (state: ReactFlowState) => state.transform;
 
@@ -20,6 +22,7 @@ export default ({ nodes, setNodes }: any) => {
 	}, [setNodes]);
 
 	const store = useStoreApi();
+	const reactFlowInstance = useReactFlow();
 	const { zoomIn, zoomOut, setCenter, setViewport } = useReactFlow();
 
 	const focusNode = () => {
@@ -47,6 +50,31 @@ export default ({ nodes, setNodes }: any) => {
 	const zoomInNode = () => { zoomIn({ duration: 600}) }
 	const zoomOutNode = () => { zoomOut({ duration: 600}) }
 
+	// Graph 数据恢复与保存
+	const flowKey = 'example-flow';
+
+  const onSave = useCallback(() => {
+    if (reactFlowInstance) {
+      const flow = reactFlowInstance.toObject();
+      localStorage.setItem(flowKey, JSON.stringify(flow));
+    }
+  }, [reactFlowInstance]);
+
+  const onRestore = useCallback(() => {
+    const restoreFlow = async () => {
+      const flow = JSON.parse(localStorage.getItem(flowKey) as string);
+
+      if (flow) {
+        const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+        setNodes(flow.nodes || []);
+        setEdges(flow.edges || []);
+        setViewport({ x, y, zoom });
+      }
+    }
+
+    restoreFlow();
+  }, [setNodes, setViewport]);
+
 	return <>
 	  <div className="description">
 	    This is an example of how you can access the internal state outside of the ReactFlow component.
@@ -72,5 +100,10 @@ export default ({ nodes, setNodes }: any) => {
 	  <button onClick={focusNode}>focus node</button>
 	  <button onClick={zoomInNode}>zoom in</button>
 	  <button onClick={zoomOutNode}>zoom out</button>
+	  <hr />
+	  <div className="save__controls">
+      <button onClick={onSave}>save</button>
+      <button onClick={onRestore}>restore</button>
+    </div>
 	</>
 } 
