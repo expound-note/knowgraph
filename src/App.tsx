@@ -18,6 +18,7 @@ import ReactFlow, {
 import './app.css';
 
 import GraphMiniMap from './controls/GraphMiniMap';
+import GraphToolbar from './controls/GraphToolbar';
 import Sidebar from './sidebar/Index';
 // 引入自定义 Node / Edge / Connection
 import Custom from './custom/Index';
@@ -61,14 +62,13 @@ function Graph() {
 
 
   // Drag to add nodes
-  let id = 0;
-  let getId = () => `node_${id++}`;
+  const getNodeId = () => `NODE_ID_${+new Date()}`;
   const reactFlowWrapper = useRef(null);
   const onDragOver = useCallback((event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }, [])
-  const onDrop = useCallback(
+  const onDrop = useCallback( 
     (event) => {
       event.preventDefault();
 
@@ -84,7 +84,7 @@ function Graph() {
       }) as XYPosition;
 
       const newNode: Node = {
-        id: getId(),
+        id: getNodeId(),
         type,
         position,
         data: { label: `${type} node` },
@@ -116,12 +116,13 @@ function Graph() {
             fitView
             attributionPosition="bottom-right" >
             <GraphMiniMap />
+            <GraphToolbar />
           </ReactFlow>
         </div>
-        <Sidebar 
+        <Sidebar
           nodes={nodes}
           selectedNode={nowSelectedNode}
-          setNodes={setNodes} 
+          setNodes={setNodes}
           setEdges={setEdges} />
       </ReactFlowProvider>
     </div>

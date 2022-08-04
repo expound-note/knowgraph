@@ -23,7 +23,11 @@ export default ({ nodes, setNodes }: any) => {
 
 	const store = useStoreApi();
 	const reactFlowInstance = useReactFlow();
-	const { zoomIn, zoomOut, setCenter, setViewport } = useReactFlow();
+	const { zoomIn, 
+		zoomOut, 
+		setEdges,
+		setCenter,
+		setViewport } = useReactFlow();
 
 	const focusNode = () => {
 	  const { nodeInternals } = store.getState();
