@@ -1093,6 +1093,11 @@
     "@types/d3-transition" "*"
     "@types/d3-zoom" "*"
 
+"@types/dagre@^0.7.47":
+  version "0.7.47"
+  resolved "https://registry.npmmirror.com/@types/dagre/-/dagre-0.7.47.tgz#1d1b89e1fac36aaf5ef5ed6274bb123073095ac5"
+  integrity sha512-oX+3aRf7L6Cqq1MvbWmmD7FpAU/T8URwFFuHBagAiyHILn3i+RNZ35/tvyq28de+lZGY3W19BxJ7FeITQDO7aA==
+
 "@types/estree@*":
   version "1.0.0"
   resolved "https://registry.npmmirror.com/@types/estree/-/estree-1.0.0.tgz#5fb2e536c1ae9bf35366eed879e827fa59ca41c2"

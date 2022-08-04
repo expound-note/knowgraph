@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Handle, Position } from 'react-flow-renderer';
+import { Handle, Position, Connection } from 'react-flow-renderer';
 
 const labelStyle = {
   display: 'flex',
@@ -16,7 +16,7 @@ const dragHandleStyle = {
 }
 
 const onConnect = (params: any) => console.log('handle onConnect', params)
-const isValidConnection = (connection) => true
+const isValidConnection = (connection: Connection) => true
 
 export default memo(() => {
   return (

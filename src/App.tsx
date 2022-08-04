@@ -34,7 +34,7 @@ function Graph() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>();
-  const [nowSelectedNode, setNowSelectedNode] = useState<Node>(null);
+  const [nowSelectedNode, setNowSelectedNode] = useState();
 
   const onInit = (_reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(_reactFlowInstance)
@@ -48,8 +48,9 @@ function Graph() {
     setEdges((eds) => addEdge(params, eds)), [])
 
   const onNodeSelect = useCallback((event, node) => {
+    console.log(event, node)
     setNowSelectedNode(node)
-  })
+  }, [])
 
   // 更新及删除 Edge
   // gets called after end of edge gets dragged to another source or target
@@ -88,7 +89,7 @@ function Graph() {
         y: event.clientY,
       }) as XYPosition
 
-      let style = ''
+      let style = undefined
       if (type === 'group') {
         style = { backgroundColor: 'rgba(255, 0, 0, 0.2)', width: 200, height: 200 }
       }
@@ -101,10 +102,10 @@ function Graph() {
         style: style
       }
 
-      console.log(nowSelectedNode)
-      if (nowSelectedNode && selectedNode.type === 'group') {
-        newNode.parentNode = nowSelectedNode.id
-      }
+      // console.log(nowSelectedNode)
+      // if (nowSelectedNode && nowSelectedNode?.type === 'group') {
+      //   newNode.parentNode = nowSelectedNode.id
+      // }
 
       setNodes((nds) => nds.concat(newNode));
     },

@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react'
-import { 
+import {
 	ReactFlowState,
 	useStoreApi,
 	PanOnScrollMode
@@ -10,7 +10,7 @@ const GraphToolbar = () => {
 
 	// 节点是否可以被拖动
 	const [isDraggable, setIsDraggable] = useState(true)
-	const onIsDraggableChecked = (event) => {
+	const onIsDraggableChecked = (event: any) => {
 		setIsDraggable(event.target.checked)
 
 		store.setState({
@@ -20,7 +20,7 @@ const GraphToolbar = () => {
 
 	// 节点是否可以被选中 ☑️
 	const [isSelectable, setIsSelectable] = useState(true)
-	const onIsSelectableChecked = (event) => {
+	const onIsSelectableChecked = (event: any) => {
 		setIsSelectable(event.target.checked)
 
 		store.setState({
@@ -30,7 +30,7 @@ const GraphToolbar = () => {
 
 	// 节点是否可以被连接 🔗
 	const [isConnectable, setIsConnectable] = useState(true)
-	const onIsConnectableChecked = (event) => {
+	const onIsConnectableChecked = (event: any) => {
 		setIsSelectable(event.target.checked)
 
 		store.setState({
@@ -40,40 +40,35 @@ const GraphToolbar = () => {
 
 	// Allow scoll to zoom
 	const [zoomOnScroll, setZoomOnScroll] = useState(true)
-	const onZoomOnScrollChecked = (event) => {
-		setZoomOnScroll(event.target.checked)
-
-		store.setState({
-			zoomOnScroll: event.target.checked
-		})
-		console.log(event.target.checked)
-		console.log(store.getState())
+	const onZoomOnScrollChecked = (value: boolean) => {
+		setZoomOnScroll(value)
+		// store.setState({zoomOnScroll: value})
 	}
 
 	// Allow scoll to pan
 	const [panOnScroll, setPanOnScroll] = useState(true)
 	const [panOnScrollMode, setPanOnScrollMode] = useState(PanOnScrollMode.Free)
-	const onPanOnScrollChecked = (value) => {
+	const onPanOnScrollChecked = (value: boolean) => {
 		setPanOnScroll(value)
-		store.setState({ panOnScroll: value })
+		// store.setState({ panOnScroll: value })
 	}
-	const onPanOnScrollModeSelected = (value) => {
+	const onPanOnScrollModeSelected = (value: PanOnScrollMode) => {
 		setPanOnScrollMode(value)
-		store.setState({ panOnScrollMode: value })
+		// store.setState({ panOnScrollMode: value })
 	}
 
 	// 是否开启双击放大的选项
 	const [zoomOnDoubleClick, setZoomOnDoubleClick] = useState(false)
-	const onZoomOnDoubleClick = (value) => {
+	const onZoomOnDoubleClick = (value: boolean) => {
 		setZoomOnDoubleClick(value)
-		store.setState({ zoomOnDoubleClick: value })
+		// store.setState({ zoomOnDoubleClick: value })
 	}
 
 	// panOnDrag
 	const [panOnDrag, setPanOnDrag] = useState(false)
-	const onPanOnDragChecked = (value) => {
+	const onPanOnDragChecked = (value: boolean) => {
 		setPanOnDrag(value)
-		store.setState({ panOnDrag: value })
+		// store.setState({ panOnDrag: value })
 	}
 
 	return <div className="toolbar">
@@ -116,7 +111,7 @@ const GraphToolbar = () => {
 	              id="zoomonscroll"
 	              type="checkbox"
 	              checked={zoomOnScroll}
-	              onChange={onZoomOnScrollChecked}
+	              onChange={(event: any) => onZoomOnScrollChecked(event.target.checked)}
 	              className="react-flow__zoomonscroll" />
             		zoomOnScroll
           	</label>
@@ -127,7 +122,7 @@ const GraphToolbar = () => {
               id="panonscroll"
               type="checkbox"
               checked={panOnScroll}
-              onChange={(event) => onPanOnScrollChecked(event.target.checked)}
+              onChange={(event: any) => onPanOnScrollChecked(event.target.checked)}
               className="react-flow__panonscroll"
             />
             panOnScroll
@@ -138,7 +133,7 @@ const GraphToolbar = () => {
             <select
               id="panonscrollmode"
               value={panOnScrollMode}
-              onChange={(event) => onPanOnScrollModeSelected(event.target.value as PanOnScrollMode) }
+              onChange={(event: any) => onPanOnScrollModeSelected(event.target.value as PanOnScrollMode) }
               className="react-flow__panonscrollmode"
             >
               <option value="free">free</option>
@@ -154,7 +149,7 @@ const GraphToolbar = () => {
 					id="zoomondbl"
 					type="checkbox"
 					checked={zoomOnDoubleClick}
-					onChange={(event) => onZoomOnDoubleClick(event.target.checked)}
+					onChange={(event: any) => onZoomOnDoubleClick(event.target.checked)}
 					className="react-flow__zoomondbl" />
 	            	zoomOnDoubleClick
           	</label>
@@ -165,7 +160,7 @@ const GraphToolbar = () => {
 					id="panOnDrag"
 					type="checkbox"
 					checked={panOnDrag}
-					onChange={(event) => onPanOnDragChecked(event.target.checked)}
+					onChange={(event: any) => onPanOnDragChecked(event.target.checked)}
 					className="react-flow__panOnDrag" />
 					panOnDrag
 			</label>
