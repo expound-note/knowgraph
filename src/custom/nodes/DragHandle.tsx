@@ -15,16 +15,20 @@ const dragHandleStyle = {
   borderRadius: '50%',
 }
 
-const onConnect = (params: any) => console.log('handle onConnect', params);
+const onConnect = (params: any) => console.log('handle onConnect', params)
+const isValidConnection = (connection) => true
 
 export default memo(() => {
   return (
     <>
-      <Handle type="target" position={Position.Left} onConnect={onConnect} />
+      <Handle type="target" position={Position.Left} 
+        onConnect={onConnect} 
+        isValidConnection={isValidConnection} />
       <div style={labelStyle}>
         Only draggable here → <span className="custom-drag-handle" style={dragHandleStyle} />
       </div>
-      <Handle type="source" position={Position.Bottom} />
+      <Handle type="source" position={Position.Bottom} 
+        isValidConnection={isValidConnection} />
     </>
   );
 })

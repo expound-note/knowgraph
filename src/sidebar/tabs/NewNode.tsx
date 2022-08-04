@@ -17,5 +17,8 @@ export default () => {
     <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'output')} draggable>
       Output Node
     </div>
+    <div className="dndnode" onDragStart={(event) => onDragStart(event, 'contextualZoom')} draggable>
+      Zoom Node
+    </div>
 	</div>
 } 

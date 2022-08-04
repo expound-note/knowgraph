@@ -28,6 +28,11 @@ import { getGraph } from './utils/api';
 // 默认加载空的节点数据
 const { nodes: initialNodes, edges: initialEdges } = { nodes: [], edges: [] };
 
+// Connecttion Validation
+const onConnectStart = (_:any, { nodeId, handleType } : any) => console.log('on connect start', { nodeId, handleType })
+const onConnectStop = (event: any) => console.log('on connect stop', event)
+const onConnectEnd = (event: any) => console.log('on connect end', event)
+
 function Graph() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -113,6 +118,10 @@ function Graph() {
             onNodeClick={(event, node) => setNowSelectedNode(node)}
             onDrop={onDrop}
             onDragOver={onDragOver}
+            onConnectStart={onConnectStart}
+            onConnectStop={onConnectStop}
+            onConnectEnd={onConnectEnd}
+            className="validationflow"
             fitView
             attributionPosition="bottom-right" >
             <GraphMiniMap />
