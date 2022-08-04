@@ -7,6 +7,10 @@
 
 Edge Type：default (bezier), straight, step and smoothstep
 
+
+A CRDT framework with a powerful abstraction of shared data
+https://github.com/yjs/yjs
+
 ### CSS Framework
 
 - https://react.fluentui.dev/

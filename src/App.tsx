@@ -13,20 +13,17 @@ import ReactFlow, {
   useEdgesState,
   ReactFlowInstance,
   ReactFlowProvider
-} from 'react-flow-renderer';
+} from 'react-flow-renderer'
 
-import './app.css';
+import './app.css'
 
-import GraphMiniMap from './controls/GraphMiniMap';
-import GraphToolbar from './controls/GraphToolbar';
-import Sidebar from './sidebar/Index';
-// 引入自定义 Node / Edge / Connection
-import Custom from './custom/Index';
+import GraphMiniMap from './controls/GraphMiniMap'
+import GraphToolbar from './controls/GraphToolbar'
+import DagreTree from './controls/DagreTree'
+import Sidebar from './sidebar/Index'
+import Custom from './custom/Index'
 
-import { getGraph } from './utils/api';
-
-// 默认加载空的节点数据
-const { nodes: initialNodes, edges: initialEdges } = { nodes: [], edges: [] };
+import { getGraph } from './utils/api'
 
 // Connecttion Validation
 const onConnectStart = (_:any, { nodeId, handleType } : any) => console.log('on connect start', { nodeId, handleType })
@@ -34,10 +31,10 @@ const onConnectStop = (event: any) => console.log('on connect stop', event)
 const onConnectEnd = (event: any) => console.log('on connect end', event)
 
 function Graph() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>();
-  const [nowSelectedNode, setNowSelectedNode] = useState<Node>();
+  const [nowSelectedNode, setNowSelectedNode] = useState<Node>(null);
 
   const onInit = (_reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(_reactFlowInstance)
@@ -49,6 +46,10 @@ function Graph() {
 
   const onConnect = useCallback((params) => 
     setEdges((eds) => addEdge(params, eds)), [])
+
+  const onNodeSelect = useCallback((event, node) => {
+    setNowSelectedNode(node)
+  })
 
   // 更新及删除 Edge
   // gets called after end of edge gets dragged to another source or target
@@ -64,7 +65,6 @@ function Graph() {
     }
     edgeUpdateSuccessful.current = true;
   }, [])
-
 
   // Drag to add nodes
   const getNodeId = () => `NODE_ID_${+new Date()}`;
@@ -86,14 +86,26 @@ function Graph() {
       const position = reactFlowInstance?.project({
         x: event.clientX,
         y: event.clientY,
-      }) as XYPosition;
+      }) as XYPosition
+
+      let style = ''
+      if (type === 'group') {
+        style = { backgroundColor: 'rgba(255, 0, 0, 0.2)', width: 200, height: 200 }
+      }
 
       const newNode: Node = {
         id: getNodeId(),
         type,
         position,
         data: { label: `${type} node` },
-      };
+        style: style
+      }
+
+      console.log(nowSelectedNode)
+      if (nowSelectedNode && selectedNode.type === 'group') {
+        newNode.parentNode = nowSelectedNode.id
+      }
+
       setNodes((nds) => nds.concat(newNode));
     },
     [reactFlowInstance]
@@ -115,7 +127,7 @@ function Graph() {
             onEdgesChange={onEdgesChange}
             onInit={onInit}
             onConnect={onConnect}
-            onNodeClick={(event, node) => setNowSelectedNode(node)}
+            onNodeClick={onNodeSelect}
             onDrop={onDrop}
             onDragOver={onDragOver}
             onConnectStart={onConnectStart}
@@ -126,6 +138,8 @@ function Graph() {
             attributionPosition="bottom-right" >
             <GraphMiniMap />
             <GraphToolbar />
+
+            <DagreTree nodes={nodes} edges={edges} />
           </ReactFlow>
         </div>
         <Sidebar
