@@ -34,7 +34,7 @@ function Graph() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>();
-  const [nowSelectedNode, setNowSelectedNode] = useState();
+  const [nowSelectedNode, setNowSelectedNode] = useState<Node>();
 
   const onInit = (_reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(_reactFlowInstance)
@@ -47,10 +47,9 @@ function Graph() {
   const onConnect = useCallback((params) => 
     setEdges((eds) => addEdge(params, eds)), [])
 
-  const onNodeSelect = useCallback((event, node) => {
-    console.log(event, node)
+  const onNodeSelect = (event: any, node: Node) => {
     setNowSelectedNode(node)
-  }, [])
+  }
 
   // 更新及删除 Edge
   // gets called after end of edge gets dragged to another source or target
@@ -74,6 +73,14 @@ function Graph() {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }, [])
+
+  const isInsideNode = (node: Node, parentNode: Node) => {
+    return node.position.x > parentNode.position.x 
+      && node.position.x < parentNode.position.x + Number(parentNode.style?.width || 0)
+      && node.position.y > parentNode.position.y
+      && node.position.y < parentNode.position.y + Number(parentNode.style?.height || 0)
+  }
+
   const onDrop = useCallback( 
     (event) => {
       event.preventDefault();
@@ -89,27 +96,31 @@ function Graph() {
         y: event.clientY,
       }) as XYPosition
 
-      let style = undefined
-      if (type === 'group') {
-        style = { backgroundColor: 'rgba(255, 0, 0, 0.2)', width: 200, height: 200 }
-      }
-
       const newNode: Node = {
         id: getNodeId(),
         type,
         position,
-        data: { label: `${type} node` },
-        style: style
+        data: { label: `${type} node` }
       }
 
-      // console.log(nowSelectedNode)
-      // if (nowSelectedNode && nowSelectedNode?.type === 'group') {
-      //   newNode.parentNode = nowSelectedNode.id
-      // }
+      if (type === 'group') {
+        newNode.style = { backgroundColor: 'rgba(255, 0, 0, 0.2)', width: 200, height: 200 }
+      }
+
+      nodes.every((node: Node) => {
+        if (node.type === 'group' && isInsideNode(newNode, node)) {
+          newNode.parentNode = node.id
+          newNode.position.x = 10
+          newNode.position.y = 10
+          return false
+        }
+
+        return true
+      })
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance]
+    [reactFlowInstance, nodes]
   )
 
   return (
