@@ -42,21 +42,20 @@ export default ({ nodes, setNodes }: any) => {
 
 	    setCenter(x, y, { zoom, duration: 1000 });
 	  }
-	};
+	}
 
 	const handleTransform = useCallback(
 	  () => () => {
 	    setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 800 });
 	  },
 	  []
-	);
+	)
 
 	const zoomInNode = () => { zoomIn({ duration: 600}) }
 	const zoomOutNode = () => { zoomOut({ duration: 600}) }
 
 	// Graph 数据恢复与保存
 	const flowKey = 'example-flow';
-
   const onSave = useCallback(() => {
     if (reactFlowInstance) {
       const flow = reactFlowInstance.toObject();

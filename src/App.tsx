@@ -21,17 +21,18 @@ import './app.css'
 
 import GraphMiniMap from './controls/GraphMiniMap'
 import GraphToolbar from './controls/GraphToolbar'
+import GraphList from './controls/GraphList'
 import DagreTree from './controls/DagreTree'
 import Sidebar from './sidebar/Index'
 import Custom from './custom/Index'
 
 import { getGraph } from './utils/api'
 
-// Connecttion Validation
-const onConnectStart = (_:any, { nodeId, handleType } : any) => console.log('on connect start', { nodeId, handleType })
-const onConnectStop = (event: any) => console.log('on connect stop', event)
-const onConnectEnd = (event: any) => console.log('on connect end', event)
-
+const saveGraph = (graph) => {
+  console.log(graph)
+  const currentGraphName = localStorage.getItem('CURRENT_GRAPH_NAME')
+  localStorage.setItem(currentGraphName, JSON.stringify(graph))
+}
 function Graph() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -51,6 +52,16 @@ function Graph() {
 
   const onNodeSelect = (event: any, node: Node) => {
     setNowSelectedNode(node)
+  }
+
+  // Connecttion Validation
+  const onConnectStart = (_:any, { nodeId, handleType } : any) => console.log('on connect start', { nodeId, handleType })
+  const onConnectStop = (event: any) => console.log('on connect stop', event)
+  const onConnectEnd = (event: any) => {
+    console.log('on connect end', event)
+    setTimeout(() => {
+      saveGraph(reactFlowInstance.toObject())
+    }, 1000)
   }
 
   // 更新及删除 Edge
@@ -140,17 +151,21 @@ function Graph() {
         return true
       })
 
-      setNodes((nds) => nds.concat(newNode));
+      setNodes((nds) => nds.concat(newNode))
+
+      setTimeout(() => {
+        saveGraph(reactFlowInstance.toObject())
+      }, 1000)
     },
     [reactFlowInstance, nodes]
   )
 
   const defaultEdgeOptions = {
-  style: { strokeWidth: 3, stroke: '#9ca8b3' },
-  markerEnd: {
-    type: MarkerType.ArrowClosed,
-  },
-}
+    style: { strokeWidth: 3, stroke: '#9ca8b3' },
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+    },
+  }
 
   const proOptions = { account: 'paid-pro', hideAttribution: true }
   return (
@@ -181,7 +196,7 @@ function Graph() {
             proOptions={proOptions} >
             <GraphMiniMap />
             <GraphToolbar />
-
+            <GraphList />
             <DagreTree nodes={nodes} edges={edges} />
           </ReactFlow>
         </div>
