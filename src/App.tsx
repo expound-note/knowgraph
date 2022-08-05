@@ -2,12 +2,14 @@ import React, { useState, useCallback, useEffect, useRef } from 'react'
 import ReactFlow, {
   Node,
   Edge,
+  MarkerType,
   Connection,
   NodeProps,
   addEdge,
   updateEdge,
   Background,
   Controls,
+  Position,
   XYPosition,
   useNodesState,
   useEdgesState,
@@ -107,6 +109,26 @@ function Graph() {
         newNode.style = { backgroundColor: 'rgba(255, 0, 0, 0.2)', width: 200, height: 200 }
       }
 
+      if (type === 'textarea') {
+        newNode.data = {
+          text: 'Click here to edit...', 
+          color: '#ff6700', 
+          rotation: 20,
+          sourcePosition: Position.Right,
+          targetPosition: Position.Left,
+        }
+      }
+
+      if (type === 'flowshape') {
+        newNode.data = { 
+          shape: 'round-rect', 
+          width: 150, 
+          height: 50, 
+          label: 'Round Rectangle', 
+          color: '#668de3' 
+        }
+      }
+
       nodes.every((node: Node) => {
         if (node.type === 'group' && isInsideNode(newNode, node)) {
           newNode.parentNode = node.id
@@ -123,6 +145,14 @@ function Graph() {
     [reactFlowInstance, nodes]
   )
 
+  const defaultEdgeOptions = {
+  style: { strokeWidth: 3, stroke: '#9ca8b3' },
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+  },
+}
+
+  const proOptions = { account: 'paid-pro', hideAttribution: true }
   return (
     <div className="graph-container">
       <ReactFlowProvider>
@@ -130,6 +160,7 @@ function Graph() {
           <ReactFlow 
             nodes={nodes} 
             edges={edges}
+            defaultEdgeOptions={defaultEdgeOptions}
             nodeTypes={Custom.nodeTypes}
             edgeTypes={Custom.edgeTypes}
             onEdgeUpdate={onEdgeUpdate}
@@ -147,7 +178,7 @@ function Graph() {
             onConnectEnd={onConnectEnd}
             className="validationflow"
             fitView
-            attributionPosition="bottom-right" >
+            proOptions={proOptions} >
             <GraphMiniMap />
             <GraphToolbar />
 
