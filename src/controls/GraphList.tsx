@@ -6,7 +6,7 @@ import {
 import './graph_list.css'
 
 const graphkey = 'graph_list'
-const list = JSON.parse(localStorage.getItem(graphkey as string))
+const list = JSON.parse(localStorage.getItem(graphkey as string)) || []
 
 const saveToLocalStorage = (current, data)  => {
 	localStorage.setItem('CURRENT_GRAPH_NAME', current)
@@ -27,7 +27,6 @@ function ListComponent(props) {
 	}, [graphs])
 
 	useEffect(() => {
-    console.log(graphs)
     graphs.forEach((graph) => {
     	if(graph.selected) {
     		setTimeout(() => {
