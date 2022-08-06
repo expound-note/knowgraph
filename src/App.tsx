@@ -29,7 +29,7 @@ import Custom from './custom/Index'
 import { getGraph } from './utils/api'
 
 const saveGraph = (graph) => {
-  console.log(graph)
+  console.log('Svaing..., ', graph)
   const currentGraphName = localStorage.getItem('CURRENT_GRAPH_NAME')
   localStorage.setItem(currentGraphName, JSON.stringify(graph))
 }
@@ -49,6 +49,15 @@ function Graph() {
 
   const onConnect = useCallback((params) => 
     setEdges((eds) => addEdge(params, eds)), [])
+
+  const onNodeDragStop = (event: React.MouseEvent, 
+    node: Node, 
+    nodes: Node[]) => {
+    console.log(node, nodes)
+    setTimeout(() => {
+      saveGraph(reactFlowInstance.toObject())
+    }, 1000)
+  }
 
   const onNodeSelect = (event: any, node: Node) => {
     setNowSelectedNode(node)
@@ -186,6 +195,7 @@ function Graph() {
             onInit={onInit}
             onConnect={onConnect}
             onNodeClick={onNodeSelect}
+            onNodeDragStop={onNodeDragStop}
             onDrop={onDrop}
             onDragOver={onDragOver}
             onConnectStart={onConnectStart}
