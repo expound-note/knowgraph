@@ -50,8 +50,8 @@ function ListComponent(props) {
 			<li key={graph.name}>
 				<input value={graph.displayName} onChange={event => updateGraphDisplayName(event, graph)}/>
 				<br />
-				<span onClick={event => handleClick(event, graph)}>ID: {graph.name}</span>
 				<SelectedIcon selected={graph.selected} /> 
+				<span onClick={event => handleClick(event, graph)}>ID: {graph.name}</span>
 				<span onClick={event => onRemove(event, graph)}>🗑️</span>
 			</li>
 	)
@@ -74,7 +74,11 @@ const GraphList = () => {
   		displayName: 'Untitled Graph',
   		selected: false
   	}
-  	localStorage.setItem(key, JSON.stringify(reactFlowInstance.toObject()))
+  	localStorage.setItem(key, JSON.stringify({
+  		nodes: [],
+  		edges: [],
+  		viewport: { x: 0, y: 0, zoom: 1}
+  	}))
 
   	graphList.push(graph)
     loadGraph(graph, graphList)
@@ -142,16 +146,13 @@ const GraphList = () => {
 
 	return (
 		<div className="graph-list">
-			<h1>
-			  Graph list 
-				<button onClick={newGraph}>New Graph</button>
-			</h1>
 			<ListComponent 
 				graphs={graphList} 
 				onSelect={loadGraph}
 				onRemove={removeGraph}
 				updateGraphsList={updateGraph}
 				clearAll={clearAll}/>
+			<p><button onClick={newGraph}>New</button></p>
 		</div>
 	)
 }

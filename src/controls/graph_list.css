@@ -5,6 +5,11 @@
 	z-index: 10;
 }
 
+.graph-list ul {
+	list-style: none;
+	padding-inline-start: 0;
+}
+
 .graph-list li input {
 	border: none;
 	border-bottom: 1px solid #ccc;
@@ -13,4 +18,9 @@
 .graph-list li span {
 	font-size: 10px;
 	color: gray;
+	cursor:  pointer;
+}
+
+.graph-list li span:hover {
+	color:  black;
 }
