@@ -4,3 +4,13 @@
 	top: 10px;
 	z-index: 10;
 }
+
+.graph-list li input {
+	border: none;
+	border-bottom: 1px solid #ccc;
+}
+
+.graph-list li span {
+	font-size: 10px;
+	color: gray;
+}
