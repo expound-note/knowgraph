@@ -105,6 +105,10 @@ const GraphList = () => {
   const clearAll = ()  => {
   	setGraphList([])
   	saveToLocalStorage('', [])
+  	// 清空画布
+  	setNodes([])
+    setEdges([])
+    setViewport({ x: 0, y: 0, zoom: 1 })
   }
 
   const removeGraph = (graph, data) => {
