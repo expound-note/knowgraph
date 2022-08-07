@@ -6,11 +6,14 @@ import { Tab,
   SelectTabData, 
   SelectTabEvent, 
   TabValue, 
-  tokens
+  tokens,
+  ToggleButton, 
+  Tooltip,
 } from "@fluentui/react-components"
 import { BoxMultipleSearchRegular, 
-  DrawShapeRegular, 
-  BookInformationRegular 
+  DrawShapeRegular,
+  BookInformationRegular,
+  bundleIcon, AppsAddInFilled, AppsAddInRegular,
 } from '@fluentui/react-icons'
 
 import './index.css'
@@ -18,15 +21,16 @@ import NewNode from './tabs/NewNode'
 import StyleNode from './tabs/StyleNode'
 import GraphInfo from './tabs/GraphInfo'
 
+const AppsAddIn = bundleIcon(AppsAddInFilled, AppsAddInRegular)
+
 const useStyles = makeStyles({
   root: {
-    width: '350px',
+    width: '400px',
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    ...shorthands.padding('0', '10px'),
     rowGap: '20px'
   },
   panels: { ...shorthands.padding(0, '10px'),
@@ -34,18 +38,27 @@ const useStyles = makeStyles({
       textAlign: 'left',
       ...shorthands.padding(0, '30px', 0, 0)
     }
+  },
+  toggle: {
+    position: 'absolute',
+    left: '0',
   }
 });
 
 export default ({ nodes, selectedNode, setNodes, setEdges }: any) => {
+  const [showSidebar, setShowSidebar] = useState(false)
   const [selectedValue, setSelectedValue] = useState<TabValue>('new_node')
   const onTabSelect = (event: SelectTabEvent, data: SelectTabData) => {
     setSelectedValue(data.value);
   }
 
   const styles = useStyles()
-  return <div className={styles.root}>
+  return <div className={styles.root} style={{marginRight: showSidebar ? 0 : '-400px', transition: 'margin-right 0.5s ease'}}>
     <TabList selectedValue={selectedValue} onTabSelect={onTabSelect}>
+      <Tooltip content="展开/收起侧边栏" relationship="label" >
+        <ToggleButton icon={<AppsAddIn />}  size="large"  style={{position: 'fixed', right: 0, zIndex: 10000}}
+          onClick={() => setShowSidebar(!showSidebar)} aria-label="Icon only" />
+      </Tooltip>
       <Tab id="NewNode" icon={<BoxMultipleSearchRegular />} value="new_node">
         New
       </Tab>
