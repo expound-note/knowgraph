@@ -112,4 +112,10 @@ const getGraph = (id: string, callback: Function) => {
   
 }
 
-export { getGraph }
+const saveGraph = (graph) => {
+  console.log('Svaing..., ', graph)
+  const currentGraphName = localStorage.getItem('CURRENT_GRAPH_NAME')
+  localStorage.setItem(currentGraphName, JSON.stringify(graph))
+}
+
+export { getGraph, saveGraph }

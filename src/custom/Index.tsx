@@ -6,6 +6,7 @@ import DragHandle from './nodes/DragHandle'
 import ContextualZoom from './nodes/ContextualZoom'
 import Textarea from './nodes/Textarea'
 import FlowShape from './nodes/FlowShape'
+import DynamicGroup from './nodes/DynamicGroup'
 
 // Custom Edges
 import Text from './edges/TextEdge'
@@ -18,7 +19,8 @@ const custom = {
 		'dragHandle': DragHandle,
 		'contextualZoom': ContextualZoom,
 		'textarea': Textarea as FunctionComponent,
-		'flowshape': FlowShape
+		'flowshape': FlowShape,
+		'dynmicGroup': DynamicGroup,
 	},
 	edgeTypes: {
 		'text': Text,

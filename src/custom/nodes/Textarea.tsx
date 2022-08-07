@@ -1,5 +1,5 @@
-import React, { useRef, useMemo } from 'react'
-import { Handle, useUpdateNodeInternals, NodeProps } from 'react-flow-renderer'
+import React, { useRef, useMemo, useState, useEffect } from 'react'
+import { Handle, useUpdateNodeInternals, NodeProps, useReactFlow } from 'react-flow-renderer'
 import {
 	makeMoveable,
 	DraggableProps,
@@ -10,8 +10,11 @@ import {
 	Resizable,
 } from 'react-moveable'
 
-const Moveable = makeMoveable<DraggableProps & ResizableProps & RotatableProps>([Draggable, Resizable, Rotatable])
+import { saveGraph } from '../../utils/api'
 
+const Moveable = makeMoveable<ResizableProps & RotatableProps>([Resizable, Rotatable])
+
+let delayDebounceFn
 export default function TextareaNode({
 	id,
 	data,
@@ -21,28 +24,83 @@ export default function TextareaNode({
 }: NodeProps) {
 	const nodeRef = useRef<HTMLDivElement>()
   	const updateNodeInternals = useUpdateNodeInternals()
+  	const reactFlowInstance = useReactFlow()
+  	const [content, setContent] = useState(data.text)
 
   	const style = useMemo(
 	    () => ({
 			background: data.color,
-			borderRadius: 20,
-			padding: 10,
+			borderRadius: 6,
+			padding: 0,
+			height: '100%',
+			transform: data.transform || ''
 	    }), [data.color])
 
+  	
   	const onResize = ({ drag, width, height }) => {
+  		clearTimeout(delayDebounceFn)
 	    if (!nodeRef.current) { return }
 
 	    nodeRef.current.style.width = `${width}px`
 	    nodeRef.current.style.height = `${height}px`
 	    nodeRef.current.style.transform = drag.transform
+
+	   	delayDebounceFn = setTimeout(() => {
+		 	const graph = reactFlowInstance.toObject()
+		 	graph.nodes.map((node: Node) => {
+		 		if (node.id === id) {
+			        node.style = {
+			          ...node.style,
+			          width: width+20,
+			          height: height+20,
+			        }
+			    }
+			    return node
+		 	})
+		 	saveGraph(graph)
+		}, 1500)
 	}
 
 	const onRotate = ({ transform }) => {
 	    if (!nodeRef.current) { return }
-
+	    clearTimeout(delayDebounceFn)
 	    nodeRef.current.style.transform = transform
 	    updateNodeInternals(id)
+
+	    delayDebounceFn = setTimeout(() => {
+	    	const graph = reactFlowInstance.toObject()
+	    	graph.nodes.map((node: Node) => {
+		 		if (node.id === id) {
+			        node.data = {
+			          ...node.data,
+			          transform: transform,
+			        }
+			    }
+			    return node
+		 	})
+		 	saveGraph(graph)
+		}, 1500)
 	}
+
+	useEffect(() => {
+		if (!nodeRef.current) { return }
+
+		const delayDebounceFn = setTimeout(() => {
+		 	const graph = reactFlowInstance.toObject()
+		 	graph.nodes.map((node: Node) => {
+		 		if (node.id === id) {
+			        node.data = {
+			          ...node.data,
+			          text: content,
+			        }
+			      }
+			      return node
+		 	})
+		 	saveGraph(graph)
+		}, 2000)
+
+		return () => clearTimeout(delayDebounceFn)
+	}, [content])
 
 	return (
 		<>
@@ -70,7 +128,8 @@ export default function TextareaNode({
 						outline: 'none',
 						border: 'none',
 		        	}}
-		            defaultValue={data.text} />
+		            defaultValue={content}
+		            onChange={event => setContent(event.target.value)} />
 
 		        <Handle position={sourcePosition} type="source" />
         		<Handle position={targetPosition} type="target" />

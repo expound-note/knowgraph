@@ -26,8 +26,8 @@ export default () => {
     <div className="dndnode" onDragStart={(event) => onDragStart(event, 'flowshape')} draggable>
       Flow Shape Node
     </div>
-    <div className="dndnode" onDragStart={(event) => onDragStart(event, 'group')} draggable>
-      Group Node
+    <div className="dndnode" onDragStart={(event) => onDragStart(event, 'dynmicGroup')} draggable>
+      Dynmic Group Node
     </div>
 	</div>
 } 

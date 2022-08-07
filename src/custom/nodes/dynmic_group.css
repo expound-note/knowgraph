@@ -1,0 +1,21 @@
+.react-flow__node-dynmicGroup {
+	border:  1px dotted black;
+	border-radius: none !important;
+}
+
+.react-flow__node-dynmicGroup .dynmic_group_label {
+	position: absolute;
+    top: -16px;
+    left: 0;
+    line-height: 8px;
+    font-size: 10px;
+    color: darkgray;
+}
+
+.react-flow__node-dynmicGroup.selected {
+	border-style: solid;
+}
+
+.react-flow__node-dynmicGroup.selected  .dynmic_group_label {
+	color: black;
+}

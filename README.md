@@ -15,6 +15,9 @@
 
 ### 自定义 Node 与 Edge
 
+1. add custom node/edge/connection type
+2. 增加引用
+3. 增加到 NewNode 列表
 
 Edge Type：default (bezier), straight, step and smoothstep
 

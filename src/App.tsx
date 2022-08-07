@@ -26,13 +26,8 @@ import DagreTree from './controls/DagreTree'
 import Sidebar from './sidebar/Index'
 import Custom from './custom/Index'
 
-import { getGraph } from './utils/api'
+import { getGraph, saveGraph } from './utils/api'
 
-const saveGraph = (graph) => {
-  console.log('Svaing..., ', graph)
-  const currentGraphName = localStorage.getItem('CURRENT_GRAPH_NAME')
-  localStorage.setItem(currentGraphName, JSON.stringify(graph))
-}
 function Graph() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -53,10 +48,9 @@ function Graph() {
   const onNodeDragStop = (event: React.MouseEvent, 
     node: Node, 
     nodes: Node[]) => {
-    console.log(node, nodes)
     setTimeout(() => {
       saveGraph(reactFlowInstance.toObject())
-    }, 1000)
+    }, 200)
   }
 
   const onNodeSelect = (event: any, node: Node) => {
@@ -70,7 +64,7 @@ function Graph() {
     console.log('on connect end', event)
     setTimeout(() => {
       saveGraph(reactFlowInstance.toObject())
-    }, 1000)
+    }, 200)
   }
 
   // 更新及删除 Edge
@@ -125,8 +119,8 @@ function Graph() {
         data: { label: `${type} node` }
       }
 
-      if (type === 'group') {
-        newNode.style = { backgroundColor: 'rgba(255, 0, 0, 0.2)', width: 200, height: 200 }
+      if (type === 'dynmicGroup') {
+        newNode.style = { width: 200, height: 200 }
       }
 
       if (type === 'textarea') {
@@ -150,10 +144,16 @@ function Graph() {
       }
 
       nodes.every((node: Node) => {
-        if (node.type === 'group' && isInsideNode(newNode, node)) {
+        if (node.type === 'dynmicGroup' && isInsideNode(newNode, node)) {
           newNode.parentNode = node.id
-          newNode.position.x = 10
-          newNode.position.y = 10
+          newNode.extent = 'parent'
+
+          // 计算相对位置
+          console.log(newNode, node)
+          const newNodeHeight = newNode?.height || newNode?.data?.height || 40
+          const newNodeWidth = newNode?.width || newNode?.data?.weight || 150
+          newNode.position.x = newNode.position.x - node.position.x - newNodeWidth/2
+          newNode.position.y = newNode.position.y - node.position.y - newNodeHeight/2
           return false
         }
 
@@ -164,13 +164,13 @@ function Graph() {
 
       setTimeout(() => {
         saveGraph(reactFlowInstance.toObject())
-      }, 1000)
+      }, 200)
     },
     [reactFlowInstance, nodes]
   )
 
   const defaultEdgeOptions = {
-    style: { strokeWidth: 3, stroke: '#9ca8b3' },
+    style: { strokeWidth: 1, stroke: '#9ca8b3' },
     markerEnd: {
       type: MarkerType.ArrowClosed,
     },
@@ -203,6 +203,7 @@ function Graph() {
             onConnectEnd={onConnectEnd}
             className="validationflow"
             fitView
+            defaultZoom={1}
             proOptions={proOptions} >
             <GraphMiniMap />
             <GraphToolbar />

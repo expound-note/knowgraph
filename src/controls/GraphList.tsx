@@ -91,6 +91,7 @@ const GraphList = () => {
 			newArr.push(item)
 		})
 
+
 		const flow = JSON.parse(localStorage.getItem(graph.name) as string)
 		const { x = 0, y = 0, zoom = 1 } = flow.viewport
     setNodes(flow.nodes || [])
