@@ -125,11 +125,9 @@ function Graph() {
 
       if (type === 'textarea') {
         newNode.data = {
-          text: 'Click here to edit...', 
+          text: 'Type here...', 
           color: '#ff6700', 
           rotation: 20,
-          sourcePosition: Position.Right,
-          targetPosition: Position.Left,
         }
       }
 
